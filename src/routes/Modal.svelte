@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { portal } from "$lib/actions/portal";
 	import { modalStore } from "$lib/modalStore";
 	import { onMount } from "svelte";
 
@@ -8,19 +9,20 @@
     });
 
     $: if (domAvailable) {
+        console.log(document.activeElement);
         if ($modalStore) document.body.children[0].setAttribute('inert', '');
         else document.body.children[0].removeAttribute('inert');
     }
 
-    function portal(element: HTMLElement) {
-        element.remove();
-        document.body.appendChild(element);
+    function focusFirstElement(node: HTMLElement) {
+        const focusable: HTMLElement[] = Array.from(node.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'));
+        if (focusable.length) focusable[0].focus();
     }
 </script>
 
 
 {#if $modalStore}
-    <div id="modal" use:portal>
+    <div id="modal" use:portal={{ target: document.body }} use:focusFirstElement>
         <p>This is a modal</p>
         <button on:click={modalStore.toggle}>Close</button>
     </div>
