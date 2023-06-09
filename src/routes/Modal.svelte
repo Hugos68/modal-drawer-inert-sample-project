@@ -9,7 +9,6 @@
     });
 
     $: if (domAvailable) {
-        console.log(document.activeElement);
         if ($modalStore) document.body.children[0].setAttribute('inert', '');
         else document.body.children[0].removeAttribute('inert');
     }
